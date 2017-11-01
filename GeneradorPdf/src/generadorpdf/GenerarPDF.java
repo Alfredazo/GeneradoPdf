@@ -28,42 +28,46 @@ import static javafx.scene.text.Font.font;
  */
 public class GenerarPDF {
     
-    private Font fuenteBold = new Font(Font.FontFamily.COURIER,12,Font.BOLD);
-    private Font fuenteNormal = new Font(Font.FontFamily.COURIER,12,Font.NORMAL);
-    private Font fuenteItalic = new Font(Font.FontFamily.COURIER,14,Font.ITALIC);
+    private Font fuenteBold = new Font(Font.FontFamily.COURIER,10,Font.BOLD);
+    private Font fuenteBoldTOP = new Font(Font.FontFamily.COURIER,10,Font.BOLD);
+    private Font fuenteNormal = new Font(Font.FontFamily.COURIER,8,Font.NORMAL);
+    private Font fuenteNormalListaDescuento = new Font(Font.FontFamily.COURIER,6,Font.NORMAL);
+    private Font fuenteItalic = new Font(Font.FontFamily.COURIER,6,Font.ITALIC);
     
     
     
-    public void generarPDF(String header,String info,String footer,String rutaImagen,
+    public void generarPDF(String bordeSuperior,String header,String header2,String info,String listado,String footer,String rutaImagen,
             String salida,String codigo){
         try {
             Document document = new Document(PageSize.A7,36,36,10,10);
             PdfWriter pw = PdfWriter.getInstance(document,new FileOutputStream(salida));
             document.open();
+            document.add(getBordeTOP(bordeSuperior));
             document.add(getHeader(header));
+            document.add(getHeader(header2));
             Image imagen=Image.getInstance(rutaImagen);
-            imagen.scaleAbsolute(50, 50);
+            imagen.scaleAbsolute(70, 70);
             imagen.setAlignment(Element.ALIGN_CENTER);
             document.add(imagen);
             document.add(getInfo(info));
             document.add(getInfo(""));
-            document.add(getInfo(""));
-            document.add(getInfo(""));
-            document.add(getBarcode(document,pw,codigo));
-            document.add(getInfo(""));
-            document.add(getFooter(footer));
-            document.close();
-            
-         
-            
-            
+            document.add(getInfoListado(listado));//
+            document.add(getBarcode(document,pw,codigo));            
+            document.add(getFooter(footer));            
+            document.close();            
         } catch (Exception e) {
         }
-         
-        
-        
-        
         }
+    private  Paragraph getBordeTOP(String texto){
+    
+        Paragraph p = new Paragraph();
+        Chunk c = new Chunk();
+        p.setAlignment(Element.ALIGN_TOP);
+        c.append(texto);
+        c.setFont(fuenteBoldTOP);
+        p.add(c);
+        return p;
+    }
     
     private  Paragraph getHeader(String texto){
     
@@ -87,7 +91,16 @@ public class GenerarPDF {
         return p;
     }
 
+    private  Paragraph getInfoListado(String texto){
     
+        Paragraph p = new Paragraph();
+        Chunk c = new Chunk();
+        p.setAlignment(Element.ALIGN_CENTER);
+        c.append(texto);
+        c.setFont(fuenteNormalListaDescuento);
+        p.add(c);
+        return p;
+    }
     
      private  Paragraph getFooter(String texto){
     
@@ -110,7 +123,7 @@ public class GenerarPDF {
      code128.setTextAlignment(Element.ALIGN_CENTER);
      
     Image image = code128.createImageWithBarcode(cimg, BaseColor.BLACK, BaseColor.BLACK);
-    float scaler = ((document.getPageSize().getWidth() - document.leftMargin()- document.rightMargin()-0)/image.getWidth()*60);
+    float scaler = ((document.getPageSize().getWidth() - document.leftMargin()- document.rightMargin()-0)/image.getWidth()*30);
     image.scalePercent(scaler);
     image.setAlignment(Element.ALIGN_CENTER);
     return image;

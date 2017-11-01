@@ -5,6 +5,10 @@
  */
 package generadorpdf;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.util.Calendar;
+
 /**
  *
  * @author MCISITLUG
@@ -15,9 +19,29 @@ public class GeneradorPdf {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-       
-        GenerarPDF g = new GenerarPDF();
-        g.generarPDF("Cupon de Descuento","Pagina Mis Ofertas","Valido hasta 11/11/11","C:\\Users\\Luciano\\Desktop\\lo.png","C:\\Users\\Luciano\\Desktop\\prueba.pdf","1234567");
+        try {
+            GenerarPDF g = new GenerarPDF();
+            Calendar fecha = Calendar.getInstance();
+            String hola = fecha.getTime().toString();
+            hola = hola.replace(" ", "");
+            hola = hola.replace(":", "");
+            System.out.println(hola);
+            String nombreSistema = System.getProperty("user.name");
+            System.out.println("Nombre Sistema: " + nombreSistema);
+
+            String urlImagen = "C:\\Users\\" + nombreSistema + "\\Desktop\\GeneradoPdf\\GeneradorPdf\\src\\generadorpdf\\img\\Logo Mis ofertas.png";
+            String urlGuardar = "C:\\Users\\" + nombreSistema + "\\Downloads\\" + hola;
+            String formato = ".pdf";
+            System.out.println("Ruta: " + urlImagen);
+            g.generarPDF("***********************", "CUPON", "DESCUENTO", "Pagina Mis Ofertas", "Alimentos\nRopa\nLinea Blancan\nElectronica", "Valido hasta 11/11/11", urlImagen, urlGuardar + formato, "1234327");
+            File path = new File(urlGuardar+formato);
+            Desktop.getDesktop().open(path);
+        } catch (Exception e) {
+
+        }
     }
+
     
+   
+
 }
